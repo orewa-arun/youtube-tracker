@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import re as regex
 
-
 def scrape_view_count(video_url):
     response = requests.get(video_url)
     if response.status_code == 200:
@@ -28,10 +27,3 @@ def scrape_view_count(video_url):
         else:
             print("Failed to extract JSON data from script.")
 
-
-# Example usage
-# Replace VIDEO_ID with the actual video ID
-video_url = "https://www.youtube.com/watch?v=6JpJzygUrAw"
-views = scrape_view_count(video_url)
-if views:
-    print("Number of views:", views)
