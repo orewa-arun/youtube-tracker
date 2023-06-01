@@ -3,27 +3,62 @@ import requests
 from bs4 import BeautifulSoup
 import re as regex
 
+
 def scrape_view_count(video_url):
     response = requests.get(video_url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
 
         # Find the script tag containing the JSON data
-        script_content = soup.find('body').find('script').string
+        view_scrap = soup.find('body').find('script').string
+        like_scrap = soup.findAll("script")
 
-        match = regex.search(r'var\s+(\w+)\s+=\s+({.*?});', script_content)
+        likes = get_likes(like_scrap)
+        views = get_views(view_scrap)
+
+    return views, likes
+
+
+def get_likes(like_scrap):
+    for k in like_scrap:
+
+        # regex for 'var variableName = { ... };'
+        match = regex.search(r'var\s+(\w+)\s+=\s+({.*?});', str(k))
 
         if match:
-            # json_variable_name = match.group(1)
-            json_content = match.group(2)
+            json_variable_name = match.group(1)
 
-            # Parse the JSON content
-            data = json.loads(json_content)
+            if json_variable_name == "ytInitialData":
+                json_content = match.group(2)
 
-            # viewCount
-            view_count = data['videoDetails']['viewCount']
+                # Parse the JSON content
+                data = json.loads(json_content)
 
-            return view_count
-        else:
-            print("Failed to extract JSON data from script.")
+                like_script = data["contents"]["twoColumnWatchNextResults"]["results"][
+                    "results"]["contents"][0]["videoPrimaryInfoRenderer"][
+                        "videoActions"]["menuRenderer"]["topLevelButtons"][0][
+                            "segmentedLikeDislikeButtonRenderer"]["likeButton"][
+                                "toggleButtonRenderer"]["defaultText"][
+                                    "accessibility"]["accessibilityData"]["label"]
+                likes = like_script.split(maxsplit=1)[0]
 
+                return likes
+
+
+def get_views(view_scrap):
+    match = regex.search(r'var\s+(\w+)\s+=\s+({.*?});', view_scrap)
+
+    if match:
+        # json_variable_name = match.group(1)
+        json_content = match.group(2)
+
+        # Parse the JSON content
+        data = json.loads(json_content)
+
+        # viewCount
+        view_count = data['videoDetails']['viewCount']
+
+        return view_count
+
+
+print(scrape_view_count("https://www.youtube.com/watch?v=0aavCtXiiX4"))
