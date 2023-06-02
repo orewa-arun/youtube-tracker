@@ -9,7 +9,7 @@ import time
 
 from dotenv import dotenv_values
 
-mdb_link = dotenv_values(".env")['MONGO_SERVER_PATH']
+mdb_link = dotenv_values(".env")["MONGO_SERVER_PATH"]
 
 # Connect to MongoDB
 client = MongoClient(mdb_link)
