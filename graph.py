@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from pymongo import MongoClient
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -25,7 +24,7 @@ period = number = st.number_input('Enter the frequency time period in mins')
 
 def add_data(link, times, views, likes):
     v, l = scrape_stats_count(link)
-    times.append(datetime.now())
+    times.append(datetime.now() + timedelta(minutes=330))
     views.append(v)
     likes.append(l)
 
