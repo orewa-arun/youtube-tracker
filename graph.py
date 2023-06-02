@@ -7,8 +7,12 @@ from datetime import datetime, timedelta
 from scrapper import scrape_stats_count
 import time
 
+from dotenv import dotenv_values
+
+mdb_link = dotenv_values(".env")['MONGO_SERVER_PATH']
+
 # Connect to MongoDB
-client = MongoClient("mongodb://localhost:27017")
+client = MongoClient(mdb_link)
 db = client["youtube"]
 collection = db["views"]
 
