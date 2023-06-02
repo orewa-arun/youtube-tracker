@@ -5,7 +5,6 @@ from dotenv import dotenv_values
 cloud_key = dotenv_values(".env")['GOOGLE_CLOUD_API_KEY']
 
 youtube = build('youtube', 'v3', developerKey=cloud_key)
-print(youtube)
 
 
 def get_video_views(video_id):
@@ -18,8 +17,12 @@ def get_video_views(video_id):
     # Extract the view count from the response
     items = response.get('items', [])
     if items:
-        view_count = items[0]['statistics']['viewCount']
-        return view_count
+        stats = items[0]['statistics']
+        view_count = stats["viewCount"]
+        like_count = stats["likeCount"]
+        comment_count = stats["commentCount"]
+
+        return (view_count, like_count, comment_count)
 
 
 def get_video_id(url):
@@ -35,7 +38,7 @@ def get_video_id(url):
 
 
 # Replace with the actual YouTube video URL
-video_url = "https://www.youtube.com/watch?v=csM-ikF-fR4"
+video_url = "https://www.youtube.com/watch?v=0aavCtXiiX4"
 video_id = get_video_id(video_url)
 views = get_video_views(video_id)
 if views:
