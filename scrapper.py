@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import re as regex
 
 
-def scrape_view_count(video_url):
+def scrape_stats_count(video_url):
     response = requests.get(video_url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -40,7 +40,7 @@ def get_likes(like_scrap):
                             "segmentedLikeDislikeButtonRenderer"]["likeButton"][
                                 "toggleButtonRenderer"]["defaultText"][
                                     "accessibility"]["accessibilityData"]["label"]
-                likes = like_script.split(maxsplit=1)[0]
+                likes = like_script.split(maxsplit=1)[0].replace(",", "")
 
                 return likes
 
@@ -61,4 +61,4 @@ def get_views(view_scrap):
         return view_count
 
 
-print(scrape_view_count("https://www.youtube.com/watch?v=0aavCtXiiX4"))
+# print(scrape_stats_count("https://www.youtube.com/watch?v=0aavCtXiiX4"))

@@ -1,2 +1,4 @@
 .env
 details.txt
+check.py
+__pycache__
